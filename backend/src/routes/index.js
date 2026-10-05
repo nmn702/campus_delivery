@@ -2,7 +2,7 @@ import express from 'express';
 import { requireAuth } from '../middleware/auth.js';
 import { getMe, updateMe } from '../controllers/userController.js';
 import { getStores } from '../controllers/storeController.js';
-import { createRunnerSession, updateRunnerSession, deleteRunnerSession, getRunners, getMySession } from '../controllers/runnerController.js';
+import { createRunnerSession, updateRunnerSession, deleteRunnerSession, getRunners, getMySession, deleteMySessions } from '../controllers/runnerController.js';
 import { createRequest, getRequest, acceptRequest, cancelRequest, completeRequest, getHistory, getPendingRequests } from '../controllers/requestController.js';
 import { requesterConfirmPayment, runnerConfirmPayment, submitCost } from '../controllers/paymentController.js';
 import { submitRating } from '../controllers/ratingController.js';
@@ -20,6 +20,7 @@ router.get('/stores', getStores);
 
 // Runner
 router.get('/runner/sessions/me', getMySession);
+router.delete('/runner/sessions/me', deleteMySessions);
 router.post('/runner/sessions', createRunnerSession);
 router.patch('/runner/sessions/:id', updateRunnerSession);
 router.delete('/runner/sessions/:id', deleteRunnerSession);

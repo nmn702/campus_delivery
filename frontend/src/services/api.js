@@ -1,12 +1,13 @@
 import axios from 'axios';
+import { auth } from '../firebase';
 
 const api = axios.create({
     baseURL: 'http://localhost:5001/api',
 });
 
-api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('mock_token');
-    if (token) {
+api.interceptors.request.use(async (config) => {
+    if (auth.currentUser) {
+        const token = await auth.currentUser.getIdToken();
         config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

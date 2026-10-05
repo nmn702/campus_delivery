@@ -142,10 +142,7 @@ export default function RequestDetails() {
                     {request.status === 'PENDING' && (
                         <div className="flex space-x-2">
                             {!isRequester && (
-                                <button onClick={handleAccept} className="bg-green-600 text-white px-4 py-2 rounded">Accept as Runner</button>
-                            )}
-                            {isRequester && (
-                                <button onClick={handleCancel} className="bg-red-100 text-red-600 px-4 py-2 rounded">Cancel Request</button>
+                                <button onClick={handleAccept} className="w-full bg-green-600 text-white px-4 py-2 rounded">Accept as Runner</button>
                             )}
                         </div>
                     )}
@@ -206,6 +203,21 @@ export default function RequestDetails() {
                         <div className="p-4 bg-gray-50 rounded text-center">
                             <p className="text-green-600 font-bold mb-2">Request Complete!</p>
                             <button onClick={() => navigate('/')} className="text-blue-600 underline">Go Home</button>
+                        </div>
+                    )}
+
+                    {request.status === 'CANCELLED' && (
+                        <div className="p-4 bg-red-50 rounded text-center">
+                            <p className="text-red-600 font-bold mb-2">Request Cancelled</p>
+                            <button onClick={() => navigate('/')} className="text-blue-600 underline">Go Home</button>
+                        </div>
+                    )}
+
+                    {!['COMPLETED', 'CANCELLED'].includes(request.status) && isRequester && (
+                        <div className="mt-6 pt-4 border-t border-gray-100">
+                            <button onClick={handleCancel} className="w-full bg-white text-red-600 px-4 py-2 rounded border border-red-200 hover:bg-red-50 transition-colors font-medium">
+                                Cancel Order
+                            </button>
                         </div>
                     )}
                 </div>

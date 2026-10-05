@@ -1,4 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react';
+import { auth } from '../firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 const AuthContext = createContext();
 
@@ -9,26 +11,24 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Mock checking local storage for a token
-        const token = localStorage.getItem('mock_token');
-        if (token) {
-            setCurrentUser({ uid: token });
-        }
-        setLoading(false);
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setCurrentUser(user);
+            setLoading(false);
+        });
+
+        return unsubscribe; // Cleanup subscription on unmount
     }, []);
 
-    const login = (uid) => {
-        localStorage.setItem('mock_token', uid);
-        setCurrentUser({ uid });
-    };
-
-    const logout = () => {
-        localStorage.removeItem('mock_token');
-        setCurrentUser(null);
+    const logout = async () => {
+        try {
+            await signOut(auth);
+        } catch (error) {
+            console.error('Failed to log out', error);
+        }
     };
 
     return (
-        <AuthContext.Provider value={{ currentUser, login, logout }}>
+        <AuthContext.Provider value={{ currentUser, logout }}>
             {!loading && children}
         </AuthContext.Provider>
     );

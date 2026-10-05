@@ -4,12 +4,14 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
     const [user, setUser] = useState(null);
+    const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
         api.get('/me').then(res => {
             setUser(res.data);
+            setName(res.data.name || '');
             setPhone(res.data.phone_number || '');
         });
     }, []);
@@ -17,7 +19,7 @@ export default function Profile() {
     const handleSave = async (e) => {
         e.preventDefault();
         try {
-            await api.patch('/me', { phone_number: phone });
+            await api.patch('/me', { name, phone_number: phone });
             alert('Profile updated');
             navigate('/');
         } catch (error) {
@@ -36,7 +38,7 @@ export default function Profile() {
                 <form onSubmit={handleSave}>
                     <div className="mb-4">
                         <label className="block mb-1 font-medium">Name</label>
-                        <input type="text" value={user.name} disabled className="w-full border p-2 rounded bg-gray-100" />
+                        <input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full border p-2 rounded" />
                     </div>
                     <div className="mb-4">
                         <label className="block mb-1 font-medium">Phone Number</label>

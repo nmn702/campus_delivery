@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
+import RequestCard from '../components/RequestCard';
 
 export default function History() {
     const [history, setHistory] = useState([]);
@@ -18,19 +19,9 @@ export default function History() {
             {history.length === 0 ? (
                 <p>No past requests found.</p>
             ) : (
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {history.map(req => (
-                        <div key={req.id} className="bg-white p-4 rounded shadow flex justify-between items-center cursor-pointer hover:bg-gray-50"
-                             onClick={() => navigate(`/request-details/${req.id}`)}>
-                            <div>
-                                <h3 className="font-bold">Request #{req.id}</h3>
-                                <p className="text-sm text-gray-600">{req.store_name} - {req.items}</p>
-                                <p className="text-xs text-gray-400">{new Date(req.created_at).toLocaleString()}</p>
-                            </div>
-                            <span className="bg-gray-100 px-3 py-1 rounded text-sm font-medium">
-                                {req.status}
-                            </span>
-                        </div>
+                        <RequestCard key={req.id} request={req} />
                     ))}
                 </div>
             )}
